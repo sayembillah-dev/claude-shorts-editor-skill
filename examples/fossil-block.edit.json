@@ -1,0 +1,96 @@
+{
+  "title": "What's Inside This 5,000-Pound Fossil Block?",
+  "hook": {"lines": ["WHAT'S INSIDE THIS", "5,000-POUND", "FOSSIL BLOCK?"], "highlight": 1},
+
+  "scenes": [
+    {"n": 1, "transition": "smoothleft",
+     "pieces": [{"src": [0.40, 1.98], "until": 1.20}, {"src": [1.99, 4.00]}]},
+    {"n": 2, "transition": "zoomin",
+     "pieces": [{"src": [0.00, 1.94], "until": 1.40}, {"src": [1.95, 3.98], "until": 3.15}, {"src": [3.99, 6.00]}]},
+    {"n": 3, "transition": "fadewhite", "gap": 0.25, "push": 0.10,
+     "pieces": [{"src": [0.00, 1.94], "until": 1.90}, {"src": [1.95, 4.00]}]},
+    {"n": 4, "transition": "circleopen",
+     "pieces": [{"src": [0.00, 2.90], "until": 2.60}, {"src": [2.91, 4.94], "until": 4.10}, {"src": [4.95, 8.00]}]},
+    {"n": 5, "transition": "slideup",
+     "pieces": [{"src": [0.00, 1.90], "until": 1.30}, {"src": [1.91, 3.90], "until": 2.85}, {"src": [3.91, 6.00]}]},
+    {"n": 6, "transition": "smoothleft",
+     "pieces": [{"src": [0.00, 2.90], "until": 2.30}, {"src": [3.50, 5.94], "until": 4.20}, {"src": [6.30, 10.0]}]},
+    {"n": 7, "transition": "zoomin",
+     "pieces": [{"src": [0.00, 2.90], "until": 2.45}, {"src": [3.30, 4.90], "until": 3.60}, {"src": [4.91, 8.00]}]},
+    {"n": 8, "transition": "smoothright",
+     "pieces": [{"src": [0.00, 2.90], "until": 3.15}, {"src": [3.30, 6.00]}]},
+    {"n": 9, "transition": "circleclose", "gap": 0.25,
+     "pieces": [{"src": [0.30, 2.98], "until": 2.00}, {"src": [3.20, 4.98], "until": 3.30}, {"src": [5.00, 7.60]}]},
+    {"n": 10, "gap": 0.95,
+     "pieces": [{"src": [0.00, 3.40]}]}
+  ],
+
+  "events": [
+    {"kind": "card",   "image": "real picture 2.png", "from": "2@3.10", "tilt": -3},
+    {"kind": "stamp",  "text": "~5,000 LBS",        "from": "2:5,000"},
+    {"kind": "stamp",  "text": "75 MILLION YEARS",  "from": "3:75"},
+    {"kind": "map",    "image": "Southern Utah map graphic.png", "from": "4:southern", "to": "4@2.70", "pin": [0.50, 0.61], "chime": "low"},
+    {"kind": "stamp",  "text": "FOUND HERE",        "from": "4:southern+0.04", "to": "4@2.70"},
+    {"kind": "map",    "image": "Raleigh Map on Transparent Background.png", "from": "4:raleigh", "to": "4@4.15", "pin": [0.645, 0.345]},
+    {"kind": "stamp",  "text": "NOW HERE",          "from": "4:raleigh+0.04", "to": "4@4.15"},
+    {"kind": "stamp",  "text": "LIKE AN OSTRICH",   "from": "5:ostrich", "to": "5@3.05"},
+    {"kind": "stamp",  "text": "8–10 FT LONG",      "from": "5:8"},
+    {"kind": "stamp",  "text": "FIRST OF ITS KIND", "from": "6:first"},
+    {"kind": "strike", "text": "SCATTERED BONES",   "from": "7:scattered", "to": "7@2.90", "strike_at": "7:could"},
+    {"kind": "stamp",  "text": "FULL PICTURE",      "from": "7@3.50", "color": "green"},
+    {"kind": "stamp",  "text": "NEW SPECIES?",      "from": "8:new", "wobble_at": "8:could#2"},
+    {"kind": "warn",   "text": "NOT CONFIRMED YET", "from": "8:scientists"},
+    {"kind": "card",   "image": "real picture 1.png", "from": "9:they", "tilt": 3}
+  ],
+
+  "punches": [
+    {"at": "2:5,000",    "strength": 0.07, "shake": 0.8},
+    {"at": "3:75",       "strength": 0.06},
+    {"at": "5:ostrich",  "strength": 0.05},
+    {"at": "6:start",    "strength": 0.07, "shake": 0.4},
+    {"at": "8:could#2",  "strength": 0.16, "shake": 1.0},
+    {"at": "9:discovery","strength": 0.06}
+  ],
+
+  "sfx": [
+    {"type": "riser",  "from": "2@3.3", "to": "3:start-0.1", "gain": 0.45},
+    {"type": "boom",   "at": "3:start-0.08", "gain": 0.7},
+    {"type": "thud",   "at": "2:5,000", "gain": 0.9},
+    {"type": "boom",   "at": "6:start", "gain": 0.6},
+    {"type": "scrape", "from": "4@2.62", "to": "4@4.1", "style": "brush"},
+    {"type": "scrape", "from": "6@4.25", "to": "6:end-0.05", "style": "pencil"},
+    {"type": "thud",   "at": "8:could#2", "gain": 0.7},
+    {"type": "riser",  "from": "9@1.4", "to": "9:they", "gain": 0.4},
+    {"type": "boom",   "at": "10:start", "gain": 0.55, "length": 2.2}
+  ],
+
+  "music": {
+    "root": "D", "scale": "minor", "bpm": 100,
+    "modes": [
+      {"from": "1:start",          "mode": "intro"},
+      {"from": "2:start-0.25",     "mode": "groove"},
+      {"from": "3:start-0.25",     "mode": "mystery"},
+      {"from": "4:start-0.25",     "mode": "groove"},
+      {"from": "6:start",          "mode": "mystery"},
+      {"from": "6:this",           "mode": "groove"},
+      {"from": "7:start-0.2",      "mode": "drive"},
+      {"from": "8:could#2-0.04",   "mode": "stop"},
+      {"from": "8:scientists",     "mode": "suspense"},
+      {"from": "9:start-0.25",     "mode": "lift"},
+      {"from": "10:start",         "mode": "outro"}
+    ]
+  },
+
+  "captions": {"colors": [{"word": "8:could#2", "color": "red"}]},
+
+  "sfx_library": {
+    "dir": "../Sound Effects Collection",
+    "whoosh": ["Whooshs/Whoosh 1.mp3", "Whooshs/Whoosh 2.mp3", "Whooshs/Whoosh 3.mp3"],
+    "boom": "Impacts/Cinematic Impact.mp3",
+    "shutter": "Camera Sounds/CAMERA-35MM-SLR-SHUTTER.wav",
+    "riser": "Risers/Cinematic Riser 9.mp3"
+  },
+
+  "watermark": true,
+  "end_logo": true
+}

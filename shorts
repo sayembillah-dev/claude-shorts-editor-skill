@@ -1,0 +1,8 @@
+#!/bin/bash
+# Entry point: ./shorts <analyze|check|preview|render|sfx-list> <project folder> [options]
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+if [ ! -x "$DIR/.venv/bin/python" ]; then
+  echo "First run: setting up the Python environment..." >&2
+  "$DIR/setup.sh" || exit 1
+fi
+exec "$DIR/.venv/bin/python" -I "$DIR/scripts/make_short.py" "$@"
