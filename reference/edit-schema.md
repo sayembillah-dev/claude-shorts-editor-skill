@@ -44,6 +44,8 @@ Scene numbers are the file numbers (`sound/2.mp3` is scene 2).
  "pieces": [{"src": [0.00, 1.94], "until": 1.40}, {"src": [1.95, 3.98], "until": "5,000"}, {"src": [3.99, 6.00]}]}
 ```
 - `pieces`: footage ranges in source seconds, played in order. Each non-last piece ends at `until` (VO seconds or a word in this scene); the last fills to the scene end. Speed is fitted automatically.
+- Optional per piece: `"reverse": true` (play backwards, e.g. a dropped object "rewinding" into a hand), `"smooth": true` (motion-interpolated slow motion instead of repeated frames; use below ~0.8x), `"vf"` (extra ffmpeg filter on the speed-fitted piece, output must stay 1080x1920, e.g. `"crop=540:960:60:600,scale=1080:1920:flags=lanczos"` to reframe, or a `zoompan` push-in), `"file"` (take this piece from another clip, path relative to the project). A piece of 1–2 source frames is a freeze frame.
+- Optional per scene: `"file"` uses that clip instead of `footages/<n>.mp4` — e.g. a CTA voiceover `sound/18.mp3` playing over `footages/17.mp4`. Add the scene's entry to `_work/analysis.json` by hand (words, `speech_end`, `video_duration`), since `analyze` only scans matching pairs.
 - `gap`: silence after the last word before the next scene (default 0.2; last scene 0.95).
 - `push`: slow zoom across the scene (0.035 default; 0.10 for a "going inside" feel).
 - `transition`: ffmpeg xfade into the next scene. Good ones: `smoothleft`, `smoothright`, `zoomin`, `fadewhite`, `fadeblack`, `circleopen`, `circleclose`, `slideup`, `slidedown`, `wipeleft`, `radial`, `hblur`, `dissolve`.

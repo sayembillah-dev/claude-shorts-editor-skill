@@ -51,6 +51,24 @@ If a file is missing or numbering does not match, stop and tell the user before 
 - Music arc: `intro` under the hook, `groove` for facts, `mystery` for "inside / buried / but…", a `stop` (tape-stop to silence) right before the single most dramatic word, `suspense` after it, `lift` for the payoff, `outro` on subscribe.
 - End on the subscribe clip with the logo card; keep it short so the Short loops back into the opening line.
 
+**Hook order**
+- If the script's question/premise line ("What if your reactions were 10× faster?") is not line 1, move that scene to the front of `scenes` so the spoken hook matches the on-screen hook on frame one. Set `hook.until` to a word early in the next scene (~4 s total).
+
+**Story continuity (check every shot against its line before rendering)**
+AI clips often contradict the voiceover. Look at a timed sheet of the clip (`ffmpeg -vf "fps=8,drawtext=…pts…,tile"`) wherever the VO says catch/save/already, and fix it in `pieces`, never by speeding up:
+- Object lands/hits when the VO says "you catch it": end the piece before the impact (`src` stops while it is still in the air) and cut to the caught shot, or play the drop then `"reverse": true` so it rewinds into the hand.
+- Object morphs mid-clip (soccer ball → rugby ball): use only the frames before the morph; hold the last good frame with a 1–2-frame piece (freeze) plus a punch.
+- Wrong proportions/framing (hero tiny next to another character): reframe with `"vf": "crop=W:H:X:Y,scale=1080:1920:flags=lanczos"` (keep 9:16) so the problem is off-screen.
+- Slowed pieces below ~0.8x get `"smooth": true`; slow motion is fine when the script is about speed/time. `check` flags them `<- slow`; that is expected.
+
+**Ending, CTA and loop**
+- A CTA voiceover with no footage (e.g. `sound/18.mp3`) plays over the final clip: add a scene `{"n": 18, "file": "footages/17.mp4", "gap": 0.9, ...}` and its entry in `_work/analysis.json` by hand. Never borrow another scene's footage unless the user asks.
+- Make the last frame flow into frame one: on the CTA, push in on the hero with `zoompan` (eased zoom to ~3x, centred on the head) so it ends on a close-up framed like the opening shot. Compare `ffmpeg -sseof -0.05` vs `-ss 0` frames side by side.
+- Put the outro music on the last content word, a red `SUBSCRIBE` stamp on row 2 (row 1 sits under the end logo), and colour "subscribe" red in captions.
+
+**Reference videos**
+- When the user shares a reference edit, make one contact sheet (`fps=1/1.5,tile=10x6`) plus a 2 fps sheet of its first 6 s. Borrow its patterns (label style, cut rate, catch punches, rewinds), not its footage.
+
 **Layout (1080x1920, YouTube UI safe)**
 - Stamps y≈375 (row 1) / 515 (row 2); cards and maps centred y≈800; captions y≈1290 (above the title/channel UI); watermark top-left; end-card logo y≈255. Change `layout` only if a face or key action is covered in preview.
 - Captions are automatic (≤3 words, active word yellow). Colour one dramatic word red via `captions.colors`.
@@ -65,8 +83,11 @@ If a file is missing or numbering does not match, stop and tell the user before 
 - Do not re-read the scripts unless something breaks; everything creative lives in `edit.json`.
 - Prefer `check` (text) over `preview` (images); preview only with targeted `--at` times after the first full preview.
 - If whisper mis-hears a word, fix the text in `_work/analysis.json` instead of re-running analyze.
+- Whisper (VAD) can drop a whole sentence: if a scene's `speech_end` is well past its last word, re-transcribe just the tail from a 16 kHz WAV (`ffmpeg -ar 16000 -ac 1`, then `faster_whisper` on the numpy array) and append the words.
+- After changing `scenes`/`pieces`, delete `_work/base.mp4` if a preview looks stale, and confirm its duration matches `check`'s total.
 
 ## Files
 - `scripts/` pipeline (`make_short.py` entry, `analyze.py`, `build_base.py`, `audio.py`, `overlay.py`, `common.py`).
 - `reference/edit-schema.md` every `edit.json` field, time-reference syntax, transitions, music modes.
 - `examples/fossil-block.edit.json` the complete plan behind "What's Inside This 5,000-Pound Fossil Block?" (`../shorts1`).
+- `examples/reflexes-10x.edit.json` "What If Your Reflexes Were 10x Faster?" (`../shorts3`): hook line moved to the front, crop/reverse/freeze continuity fixes, CTA scene over the last clip with a zoompan loop ending.

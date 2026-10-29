@@ -4,23 +4,39 @@ import subprocess
 
 def run(p):
     inputs, chains = [], []
+    seg_in = []  # input index of each scene's own clip
+    for s in p.scenes:
+        seg_in.append(len(inputs) // 2)
+        inputs += ["-i", str(p.proj / s.get("file", f"footages/{s['n']}.mp4"))]
     for i, s in enumerate(p.scenes):
         n = s["n"]
-        inputs += ["-i", str(p.proj / "footages" / f"{n}.mp4")]
         L = p.D[i] + p.lead(i)  # segment length on the output timeline
         vdur = p.an["scenes"][str(n)]["video_duration"]
         pieces = s.get("pieces") or [{"src": [0, vdur]}]
         labels, t_prev = [], 0.0
         for k, pc in enumerate(pieces):
             a, b = pc["src"]
-            b = min(b, vdur)
+            inp = seg_in[i]
+            if pc.get("file"):  # a piece may come from a different clip
+                inp = len(inputs) // 2
+                inputs += ["-i", str(p.proj / pc["file"])]
+            else:
+                b = min(b, vdur)
             t_end = L if k == len(pieces) - 1 else p.local(n, pc["until"]) + p.lead(i)
             out_dur = t_end - t_prev
             if out_dur <= 0.02:
                 raise SystemExit(f"Scene {n} piece {k + 1} ends before it starts (until={pc.get('until')})")
+            rev = "reverse," if pc.get("reverse") else ""
+            vf = f"{pc['vf']}," if pc.get("vf") else ""  # extra filter on the speed-fitted piece (crop, zoompan …)
+            # smooth: motion-interpolate slowed footage instead of repeating frames
+            fps = (f"minterpolate=fps={p.fps}:mi_mode=mci:mc_mode=aobmc:vsbmc=1" if pc.get("smooth")
+                   else f"fps={p.fps}")
+            # pad the source with its last frame before the speed change so short or interpolated pieces
+            # never come out shorter than their slot (minterpolate drops the tail)
             chains.append(
-                f"[{i}:v]trim=start={a}:end={b},setpts=(PTS-STARTPTS)*{out_dur / (b - a):.5f},"
-                f"fps={p.fps},tpad=stop_mode=clone:stop_duration=0.5,trim=duration={out_dur:.4f},"
+                f"[{inp}:v]trim=start={a}:end={b},setpts=PTS-STARTPTS,{rev}"
+                f"tpad=stop_mode=clone:stop_duration={max(0.5, b - a):.3f},setpts=PTS*{out_dur / (b - a):.5f},"
+                f"{fps},{vf}tpad=stop_mode=clone:stop_duration=0.5,trim=duration={out_dur:.4f},"
                 f"setpts=PTS-STARTPTS[s{i}p{k}]")
             labels.append(f"[s{i}p{k}]")
             t_prev = t_end
